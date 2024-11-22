@@ -67,6 +67,23 @@ def sendRandomMessage():
         "No Python, funções anônimas são chamadas de 'lambda'.",
         "O uso de 'algoritmos de busca' pode ser crucial para encontrar informações rapidamente em grandes bases de dados.",
         "Em C++, o operador 'new' é usado para alocar memória dinamicamente."
+
+         # 15 Frases de C-3PO moderando o servidor
+        "Peço a todos que mantenham a calma!!! A situação está sob controle, espero.",
+        "Por favor, respeitem as regras, senão a situação pode se complicar!",
+        "Lembre-se, senhores, devemos manter a ordem e a compostura em todos os momentos.",
+        "Ah, uma pequena discussão, mas nada que não possa ser resolvido de forma pacífica.",
+        "Parece que a tensão aumentou um pouco, vamos manter a calma, por favor!",
+        "Deixe-me lembrar a todos que uma conversa civilizada é muito mais produtiva.",
+        "Senhores, não precisamos de mais conflito, o ambiente deve ser pacífico!",
+        "Com todo o respeito, gostaria de pedir um pouco de ordem no servidor.",
+        "A calma é o melhor remédio para qualquer situação. Vamos evitar o caos!",
+        "Senhor, este ambiente não parece propício para discussões acaloradas.",
+        "Por favor, todos, vamos manter a compostura e não perder o controle.",
+        "Não há necessidade de gritar, senhores! Vamos manter um nível de civilidade.",
+        "Eu sou C-3PO, fluente em 6 milhões de formas de comunicação, e até eu sei que é melhor manter a paz.",
+        "Por favor, senhores, não vamos arruinar a harmonia do servidor com discussões desnecessárias.",
+        "Este é um momento para manter a calma, não para perder a cabeça."
     ]
     
     return random.choice(messages)
