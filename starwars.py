@@ -53,7 +53,52 @@ STARSHIP_RESPONSES = [
     "A {name} é uma lenda no espaço.",
 ]
 
-# Função principal de busca
+# Função para buscar dados técnicos (ficha técnica)
+async def get_technical_sheet(query):
+    # Limpeza da entrada para extrair apenas o nome relevante (ex: "luke", "leia")
+    cleaned_query = ''.join([char for char in query.strip().lower() if char.isalnum() or char.isspace()]).split()[-1]
+    print(f"Consulta limpa para ficha técnica: {cleaned_query}")
+
+    # Buscar em People (Personagens)
+    people = await fetch_swapi_data("people", cleaned_query)
+    if people:
+        person = people[0]
+        sheet = f"**Ficha Técnica - {person['name']}**\n"
+        sheet += f"Nome: {person['name']}\n"
+        sheet += f"Genero: {person.get('gender', 'Desconhecido')}\n"
+        sheet += f"Altura: {person.get('height', 'Desconhecida')}\n"
+        sheet += f"Cor dos Cabelos: {person.get('hair_color', 'Desconhecida')}\n"
+        sheet += f"Cor dos Olhos: {person.get('eye_color', 'Desconhecida')}\n"
+        sheet += f"Data de Nascimento: {person.get('birth_year', 'Desconhecida')}\n"
+        sheet += f"Espécie: {person.get('species', 'Desconhecida')}\n"
+        return sheet
+
+    # Buscar em Planets (Planetas)
+    planets = await fetch_swapi_data("planets", cleaned_query)
+    if planets:
+        planet = planets[0]
+        sheet = f"**Ficha Técnica - {planet['name']}**\n"
+        sheet += f"Nome: {planet['name']}\n"
+        sheet += f"Clima: {planet.get('climate', 'Desconhecido')}\n"
+        sheet += f"Terreno: {planet.get('terrain', 'Desconhecido')}\n"
+        sheet += f"População: {planet.get('population', 'Desconhecida')}\n"
+        return sheet
+
+    # Buscar em Starships (Naves)
+    starships = await fetch_swapi_data("starships", cleaned_query)
+    if starships:
+        starship = starships[0]
+        sheet = f"**Ficha Técnica - {starship['name']}**\n"
+        sheet += f"Nome: {starship['name']}\n"
+        sheet += f"Modelo: {starship.get('model', 'Desconhecido')}\n"
+        sheet += f"Fabricante: {starship.get('manufacturer', 'Desconhecido')}\n"
+        sheet += f"Capacidade de Passageiros: {starship.get('passengers', 'Desconhecida')}\n"
+        sheet += f"Velocidade: {starship.get('max_atmosphering_speed', 'Desconhecida')}\n"
+        return sheet
+
+    return "Desculpe, não encontrei nenhuma informação técnica relevante."
+
+# Função principal de busca (manter frases divertidas)
 async def get_swapi_data(query):
     # Limpeza da entrada para extrair apenas o nome relevante (ex: "luke", "leia")
     cleaned_query = ''.join([char for char in query.strip().lower() if char.isalnum() or char.isspace()]).split()[-1]
@@ -73,7 +118,7 @@ async def get_swapi_data(query):
     if planets:
         planet = planets[0]
         response = random.choice(PLANET_RESPONSES).format(
-            name=planet["name"], info=planet.get("climate", "muito peculiar")
+            name=planet["name"], info=planet.get("climate", "um clima intrigante")
         )
         return response
 
@@ -82,8 +127,8 @@ async def get_swapi_data(query):
     if starships:
         starship = starships[0]
         response = random.choice(STARSHIP_RESPONSES).format(
-            name=starship["name"], info=starship.get("model", "fascinante")
+            name=starship["name"], info=starship.get("model", "um modelo não identificado")
         )
         return response
 
-    return "Desculpe, não encontrei nenhuma informação relevante."
+    return None  # Retorna None se não encontrar nada

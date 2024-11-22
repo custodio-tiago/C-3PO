@@ -3,7 +3,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from conversation import handle_greetings
-from starwars import get_swapi_data
+from starwars import get_swapi_data, get_technical_sheet
 
 # Carregar variáveis de ambiente
 load_dotenv()
@@ -21,7 +21,6 @@ async def on_ready():
     print(f"{bot.user} está online!")
 
 # Evento: Mensagem recebida
-# Evento: Mensagem recebida
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
@@ -34,12 +33,22 @@ async def on_message(message):
         return  # Impede que o bot processe outros comandos após uma saudação
 
     # Depois, busca por informações na SWAPI com base na mensagem atual
+    if message.content.startswith("!"):  # Comando iniciado com "!"
+        query = message.content[1:].strip()  # Remover "!" do começo
+        # Se for uma busca por ficha técnica (comando no formato !nome)
+        if query:
+            response = await get_technical_sheet(query)
+            if response:
+                await message.channel.send(response)
+                return
+
+    # Se não for nem uma saudação nem um termo da SWAPI, continua com outros comandos
     response = await get_swapi_data(message.content)
     if response:  # Se a resposta for encontrada na SWAPI
         await message.channel.send(response)
         return  # Impede que o bot processe outros comandos após encontrar na SWAPI
 
-    # Se não for nem uma saudação nem um termo da SWAPI, continua com outros comandos
+    # Processar comandos do bot normalmente
     await bot.process_commands(message)
 
 # Rodar o bot
