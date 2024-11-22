@@ -21,24 +21,25 @@ async def on_ready():
     print(f"{bot.user} está online!")
 
 # Evento: Mensagem recebida
+# Evento: Mensagem recebida
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
         return
 
-    # Verifica se a mensagem é uma saudação e responde
+    # Primeiro, verifica se a mensagem é uma saudação
     response = handle_greetings(message.content)
-    if response:
+    if response:  # Se for uma saudação
         await message.channel.send(response)
         return  # Impede que o bot processe outros comandos após uma saudação
 
-    # Agora, busca por informações na SWAPI com base na mensagem atual
+    # Depois, busca por informações na SWAPI com base na mensagem atual
     response = await get_swapi_data(message.content)
-    if response:  # Verifica se houve correspondência na SWAPI
+    if response:  # Se a resposta for encontrada na SWAPI
         await message.channel.send(response)
-        return
+        return  # Impede que o bot processe outros comandos após encontrar na SWAPI
 
-    # Se não for uma saudação nem um termo da SWAPI, continua com outros comandos
+    # Se não for nem uma saudação nem um termo da SWAPI, continua com outros comandos
     await bot.process_commands(message)
 
 # Rodar o bot
