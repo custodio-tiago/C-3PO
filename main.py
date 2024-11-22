@@ -1,8 +1,10 @@
 import os
 import discord
+import random
+import asyncio
 from discord.ext import commands
 from dotenv import load_dotenv
-from conversation import handle_greetings
+from conversation import handle_greetings, sendRandomMessage
 from starwars import get_swapi_data, get_technical_sheet
 
 # Carregar variáveis de ambiente
@@ -19,6 +21,8 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 @bot.event
 async def on_ready():
     print(f"{bot.user} está online!")
+    # Inicia o envio de mensagens aleatórias
+    bot.loop.create_task(send_random_messages())
 
 # Evento: Mensagem recebida
 @bot.event
@@ -50,6 +54,17 @@ async def on_message(message):
 
     # Processar comandos do bot normalmente
     await bot.process_commands(message)
+
+# Função para enviar mensagens aleatórias
+async def send_random_messages():
+    while True:
+        # Espera um intervalo aleatório entre 5 e 30 segundos
+        await asyncio.sleep(random.randint(5, 30))
+        # Envia uma mensagem aleatória para todos os canais de texto disponíveis
+        channel = random.choice(bot.guilds[0].text_channels)  # Escolhe um canal de texto aleatório
+        message = sendRandomMessage()
+        if channel:
+            await channel.send(message)
 
 # Rodar o bot
 if __name__ == "__main__":
