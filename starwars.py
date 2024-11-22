@@ -3,6 +3,16 @@ import random
 
 SWAPI_BASE_URL = "https://swapi.dev/api/"
 
+# Função para buscar na SWAPI
+async def fetch_swapi_data(endpoint, search):
+    url = f"{SWAPI_BASE_URL}{endpoint}/?search={search}"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            if response.status == 200:
+                data = await response.json()
+                return data.get("results", [])
+    return []
+
 # Frases pré-definidas
 PEOPLE_RESPONSES = [
     "Esse {name} parece ser uma pessoa interessante!",
@@ -16,6 +26,7 @@ PEOPLE_RESPONSES = [
     "{name}? Ouvi falar que ele é {info}.",
     "Os Jedi sempre falam sobre {name} com respeito.",
 ]
+
 PLANET_RESPONSES = [
     "O planeta {name} é conhecido por sua {info}.",
     "{name} parece ser um lugar incrível para visitar!",
@@ -28,6 +39,7 @@ PLANET_RESPONSES = [
     "{name} é famoso por ser um local {info}.",
     "A cultura de {name} é bem peculiar.",
 ]
+
 STARSHIP_RESPONSES = [
     "A nave {name} é conhecida por sua {info}.",
     "{name} é um marco na história das espaçonaves!",
@@ -41,22 +53,14 @@ STARSHIP_RESPONSES = [
     "A {name} é uma lenda no espaço.",
 ]
 
-# Função para buscar na SWAPI
-async def fetch_swapi_data(endpoint, search):
-    url = f"{SWAPI_BASE_URL}{endpoint}/?search={search}"
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            if response.status == 200:
-                data = await response.json()
-                return data.get("results", [])
-    return []
-
 # Função principal de busca
 async def get_swapi_data(query):
-    query = query.lower()
+    # Limpeza da entrada para extrair apenas o nome relevante (ex: "luke", "leia")
+    cleaned_query = ''.join([char for char in query.strip().lower() if char.isalnum() or char.isspace()]).split()[-1]
+    print(f"Consulta limpa: {cleaned_query}")
 
-    # Buscar em People
-    people = await fetch_swapi_data("people", query)
+    # Buscar em People (Personagens)
+    people = await fetch_swapi_data("people", cleaned_query)
     if people:
         person = people[0]
         response = random.choice(PEOPLE_RESPONSES).format(
@@ -64,8 +68,8 @@ async def get_swapi_data(query):
         )
         return response
 
-    # Buscar em Planets
-    planets = await fetch_swapi_data("planets", query)
+    # Buscar em Planets (Planetas)
+    planets = await fetch_swapi_data("planets", cleaned_query)
     if planets:
         planet = planets[0]
         response = random.choice(PLANET_RESPONSES).format(
@@ -73,8 +77,8 @@ async def get_swapi_data(query):
         )
         return response
 
-    # Buscar em Starships
-    starships = await fetch_swapi_data("starships", query)
+    # Buscar em Starships (Naves)
+    starships = await fetch_swapi_data("starships", cleaned_query)
     if starships:
         starship = starships[0]
         response = random.choice(STARSHIP_RESPONSES).format(
