@@ -96,39 +96,55 @@ async def get_technical_sheet(query):
         sheet += f"Velocidade: {starship.get('max_atmosphering_speed', 'Desconhecida')}\n"
         return sheet
 
-    return "Desculpe, não encontrei nenhuma informação técnica relevante."
+    return "Desculpe, eu sou apenas um droid diplomata!"
+
+# Função para identificar o nome e tipo na frase
+def identify_name_and_type(query):
+    # Exemplo de busca de padrões (isso pode ser refinado conforme necessário)
+    keywords = {
+        "people": ["luke", "leia", "han", "chewbacca", "darth", "yoda", "obi-wan"],
+        "planet": ["tatooine", "endor", "dagobah", "coruscant", "hoth", "naboo", "jakku"],
+        "starship": ["falcon", "death star", "x-wing", "tiefighter", "slave i"]
+    }
+
+    # Tenta identificar se o nome é de uma pessoa, planeta ou nave
+    cleaned_query = ''.join([char for char in query.strip().lower() if char.isalnum() or char.isspace()])
+
+    for category, names in keywords.items():
+        for name in names:
+            if name in cleaned_query:
+                return name, category
+    
+    return None, None
 
 # Função principal de busca (manter frases divertidas)
 async def get_swapi_data(query):
-    # Limpeza da entrada para extrair apenas o nome relevante (ex: "luke", "leia")
-    cleaned_query = ''.join([char for char in query.strip().lower() if char.isalnum() or char.isspace()]).split()[-1]
-    print(f"Consulta limpa: {cleaned_query}")
+    # Identificar o nome e tipo
+    name, category = identify_name_and_type(query)
+    if not name:
+        return "Concordo plenamente com você!"
 
-    # Buscar em People (Personagens)
-    people = await fetch_swapi_data("people", cleaned_query)
-    if people:
-        person = people[0]
+    # Buscar no tipo identificado
+    data = await fetch_swapi_data(category, name)
+    if category == "people" and data:
+        person = data[0]
         response = random.choice(PEOPLE_RESPONSES).format(
             name=person["name"], info=person.get("gender", "um grande mistério")
         )
         return response
 
-    # Buscar em Planets (Planetas)
-    planets = await fetch_swapi_data("planets", cleaned_query)
-    if planets:
-        planet = planets[0]
+    if category == "planet" and data:
+        planet = data[0]
         response = random.choice(PLANET_RESPONSES).format(
             name=planet["name"], info=planet.get("climate", "um clima intrigante")
         )
         return response
 
-    # Buscar em Starships (Naves)
-    starships = await fetch_swapi_data("starships", cleaned_query)
-    if starships:
-        starship = starships[0]
+    if category == "starship" and data:
+        starship = data[0]
         response = random.choice(STARSHIP_RESPONSES).format(
             name=starship["name"], info=starship.get("model", "um modelo não identificado")
         )
         return response
 
-    return None  # Retorna None se não encontrar nada
+    return "Não sei se é bem assim!"

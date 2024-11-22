@@ -7,7 +7,7 @@ def handle_greetings(message):
     for greeting in greetings:
         # A expressão regular busca a saudação isolada (exemplo: " oi ", " oi!" ou "oi.")
         if re.search(r'\b' + re.escape(greeting) + r'\b', message.lower()):
-            return "Olá! Como posso ajudá-lo hoje?"
+            return "Olá, eu sou C-3PO, fluente em mais de seis milhões de formas de comunicação."
     return None
 
 def sendRandomMessage():
