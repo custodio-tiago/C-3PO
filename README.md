@@ -3,6 +3,11 @@ Bot para o Discord que sabe tudo sobre o universo Star Wars e modera o server
 
 ![image](https://github.com/user-attachments/assets/09836c19-1b26-4f0d-83fb-620683a967bb)
 
+C-3PO ajuda a manter o server sobre controle e fornece informações relevantes sobre a galáxia e também sobre programação
+  
+![image](https://github.com/user-attachments/assets/7fc62a35-7bfb-4bbb-aee2-8f5c47f49d7e)
+
+
 ## Características
 - Responde cumprimentos como oi, olá, etc
 - Reconhece nomes de pessoas, naves e planetas no meio das frases e responde com frases divertidas sobre o assunto
